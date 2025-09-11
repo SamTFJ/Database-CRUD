@@ -10,7 +10,7 @@ source .venv/bin/activate
 
 ### Then, install the requirements for it
 ```
-.venv/bin/activate -m pip install -r requirements.txt
+.venv/bin/python3 -m pip install -r requirements.txt
 ```
 
 ### Finaly, to run
