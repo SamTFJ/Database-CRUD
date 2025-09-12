@@ -43,11 +43,9 @@ class DBconnect:
         self.conn.close()
 
     # Executes a SQL command
-    def execute_command(self, sqlcommand):
-        self.cur.execute(sqlcommand)
+    def execute_command(self, sqlcommand, Params = None):
+        self.cur.execute(sqlcommand, Params)
         self.conn.commit()
-        
-        return self.cur.fetchall()
 
 if __name__ == "__main__":
     db = DBconnect()
@@ -59,8 +57,15 @@ if __name__ == "__main__":
             ORDER BY table_name;
         """)
 
-    result = db.execute_command(query)
+    query2 = sql.SQL("""SELECT * FROM item;""")
 
-    print(result)
+    db.execute_command(query2)
+    for item in db.cur.fetchall():
+        print("+-------+")
+        for items in item:
+            if items == item[0]:
+                print("|", items, "   |")
+            else:
+                print("|", items, "|")
 
     db.end_connection()
