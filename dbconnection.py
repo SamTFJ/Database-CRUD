@@ -1,71 +1,84 @@
-# To connect to postgreSQL
-import psycopg2
-from psycopg2 import sql
-# To load the .env file
-from dotenv import load_dotenv
-# Importing OS commands to load the .env correctly
+# dbconnection.py
 import os
-# To use assyncronous commands
-import asyncio
+import psycopg2
+from psycopg2 import sql, OperationalError, DatabaseError
+from dotenv import load_dotenv
+from typing import Any, List, Optional
 
-# loading .env
-load_dotenv(".env",override = True)
+# ensures it loads from the .env in the current folder (override for development)
+load_dotenv(dotenv_path=".env", override=True)
 
 class DBconnect:
     def __init__(self):
-        # To avoid attribute errors
-        self.conn = None
-        self.cur = None
+        self.conn: Optional[psycopg2.extensions.connection] = None
+        self.cur: Optional[psycopg2.extensions.cursor] = None
+        self._connect()
 
-        # Throws an exception in case of connection failure
+    def _connect(self):
         try:
             self.conn = psycopg2.connect(
-                dbname= os.getenv("db_name"),
+                dbname=os.getenv("db_name"),
                 user=os.getenv("db_user"),
                 password=os.getenv("db_password"),
                 host=os.getenv("db_host"),
                 port=os.getenv("db_port")
             )
-        
-        except (Exception, psycopg2.Error) as error:
-            print("Error while connecting to PostgreSQL:", error)
-
-        # Tries to create a cursor to execute SQL commands
-        try:
             self.cur = self.conn.cursor()
+        except (OperationalError, Exception) as err:
+            # prints useful info and keeps attributes as None for future calls to check
+            print("Error while connecting to PostgreSQL:", err)
+            self.conn = None
+            self.cur = None
 
-        except psycopg2.Error as error:
-            print("Couldn't create the cursor")
-
-    # ends connections with the database
     def end_connection(self):
-        self.cur.close()
-        self.conn.close()
+        try:
+            if self.cur:
+                self.cur.close()
+            if self.conn:
+                self.conn.close()
+        except Exception as e:
+            print("Error closing connection:", e)
+        finally:
+            self.cur = None
+            self.conn = None
 
-    # Executes a SQL command
-    def execute_command(self, sqlcommand, Params = None):
-        self.cur.execute(sqlcommand, Params)
-        self.conn.commit()
+    def _ensure_connection(self):
+        if self.conn is None or self.cur is None:
+            self._connect()
+        if self.conn is None or self.cur is None:
+            raise ConnectionError("No database connection available.")
 
-if __name__ == "__main__":
-    db = DBconnect()
+    def execute_command(self, sqlcommand: Any, params: Optional[tuple] = None,
+                          fetch: bool = False, fetch_one: bool = False) -> Optional[List[tuple]]:
+        """
+        Executes an SQL command.
+        - sqlcommand: SQL string or psycopg2.sql.SQL
+        - params: tuple with parameters (or None)
+        - fetch: if True, returns cur.fetchall()
+        - fetch_one: if True, returns cur.fetchone()
+        Returns None on error.
+        """
+        try:
+            self._ensure_connection()
+            self.cur.execute(sqlcommand, params)
+            # Commit only if necessary (INSERT/UPDATE/DELETE) - safe to always do
+            try:
+                self.conn.commit()
+            except Exception:
+                # some read-only connections don't require it, ignore
+                pass
 
-    query = sql.SQL("""
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'public'
-            ORDER BY table_name;
-        """)
-
-    query2 = sql.SQL("""SELECT * FROM item;""")
-
-    db.execute_command(query2)
-    for item in db.cur.fetchall():
-        print("+-------+")
-        for items in item:
-            if items == item[0]:
-                print("|", items, "   |")
-            else:
-                print("|", items, "|")
-
-    db.end_connection()
+            if fetch_one:
+                return [self.cur.fetchone()]
+            if fetch:
+                return self.cur.fetchall()
+            return None
+        except (DatabaseError, Exception) as e:
+            # rolls back if possible and shows the error
+            if self.conn:
+                try:
+                    self.conn.rollback()
+                except Exception:
+                    pass
+            print("Database error:", e)
+            raise  # re-raises for the caller to handle (or remove raise if you prefer to return None)
