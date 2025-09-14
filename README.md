@@ -24,7 +24,7 @@ source .venv/bin/activate
 ### Por fim, para rodar
 
 ```
-.venv/bin/python3 -m dbconnection
+.venv/bin/python3 -m db_connection
 ```
 
 ### Dependências adicionais (se ainda não estiverem instaladas)
@@ -41,6 +41,10 @@ Este projeto requer `psycopg2` (ou `psycopg2-binary`) e `python-dotenv` para se 
 ### Como executar a aplicação (recomendado)
 
 Após instalar as dependências e ativar o ambiente virtual, rode o ponto de entrada principal da aplicação:
+
+```bash
+psql -h localhost -U username -d db_name -f init_db.sql
+```
 
 ```bash
 .venv/bin/python3 main.py
