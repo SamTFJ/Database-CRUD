@@ -1,3 +1,8 @@
+## Diagrama de Classes - SPEED HYPERMARKET Estoque
+
+![Diagrama de Classes](assets/uml_bd.png)
+
+
 ### Primeiro, crie a pasta virtual .venv
 
 ```
