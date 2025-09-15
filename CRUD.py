@@ -54,30 +54,6 @@ class CRUD:
         self.db.execute_command(query, data_to_send)
         print("Item inserted")
 
-    def generate_stock_report(self):
-        print(f"\n{'='*50}")
-        print(f"{'STOCK REPORT':^50}")
-        print(f"{'='*50}\n")
-
-        # Query to fetch the summary data from our VIEW
-        summary_query = sql.SQL("SELECT * FROM general_stock_report;")
-        self.db.execute_command(summary_query)
-        
-        # We use fetchone() because the VIEW only returns one row of totals
-        report_data = self.db.cur.fetchone()
-
-        if report_data:
-            print(f"{' GENERAL STOCK SUMMARY ':-^50}")
-            # report_data[0], [1], etc., correspond to the columns in the VIEW
-            print(f"Unique items registered: {report_data[0]}")
-            print(f"Total units in stock: {report_data[1]}")
-            print(f"Total stock value: R$ {report_data[2]:.2f}")
-            print(f"Average price per item: R$ {report_data[3]:.2f}")
-            print(f"{'-'*50}\n")
-        else:
-            print("Could not generate report. The stock might be empty.")
-
-
     def update_item(self):
         name = input("Write the name of the product that will be updated: ")
 
@@ -149,6 +125,29 @@ class CRUD:
             print("Items found")
         else:
             print("Items not found")
+
+    def generate_stock_report(self):
+        print(f"\n{'='*50}")
+        print(f"{'STOCK REPORT':^50}")
+        print(f"{'='*50}\n")
+
+        # Query to fetch the summary data from our VIEW
+        summary_query = sql.SQL("SELECT * FROM general_stock_report;")
+        self.db.execute_command(summary_query)
+        
+        # We use fetchone() because the VIEW only returns one row of totals
+        report_data = self.db.cur.fetchone()
+
+        if report_data:
+            print(f"{' GENERAL STOCK SUMMARY ':-^50}")
+            # report_data[0], [1], etc., correspond to the columns in the VIEW
+            print(f"Unique items registered: {report_data[0]}")
+            print(f"Total units in stock: {report_data[1]}")
+            print(f"Total stock value: R$ {report_data[2]:.2f}")
+            print(f"Average price per item: R$ {report_data[3]:.2f}")
+            print(f"{'-'*50}\n")
+        else:
+            print("Could not generate report. The stock might be empty.")
 
     def EndConnection(self):
         self.db.end_connection()
