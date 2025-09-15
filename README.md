@@ -1,6 +1,6 @@
 ## Diagrama de Classes - SPEED HYPERMARKET Estoque
 
-![Diagrama de Classes](assets/uml_errata_@.png)
+![Diagrama de Classes](assets/uml_errata.png)
 
 ### First create the virtual .venv folder
 ```
