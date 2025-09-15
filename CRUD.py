@@ -14,7 +14,8 @@ class CRUD:
             print("|     3 - Delete item             |")
             print("|     4 - Search for item         |")
             print("|     5 - Show all items          |")
-            print("|     6 - Save and exit           |")
+            print("|     6 - Generate Stock Report   |")
+            print("|     7 - Save and exit           |")
             print("|=================================|")
 
             choice = input("Select an option: ")
@@ -30,35 +31,63 @@ class CRUD:
             elif choice == '5':
                 self.list_collection()
             elif choice == '6':
+                self.generate_stock_report()
+            elif choice == '7':
                 self.EndConnection()
                 print("Exiting application...")
                 break
             else:
                 print("Invalid option. Please try again.")
 
-            if choice != '6':
-                input("Press Enter to continue...")
+            if choice != '7':
+                input("\nPress Enter to continue...")
 
     def insert_item(self):
         name = input("Write the name of the product: ")
         value = float(input("Write the value of the product (EX: 20.5): "))
+        quantity = int(input("Write the quantity in stock: "))
 
-        query = sql.SQL("INSERT INTO item (name, value) VALUES (%s, %s)")
+        query = sql.SQL("INSERT INTO item (name, value, quantity) VALUES (%s, %s, %s)")
 
-        data_to_send = (name, value)
+        data_to_send = (name, value, quantity)
 
         self.db.execute_command(query, data_to_send)
         print("Item inserted")
+
+    def generate_stock_report(self):
+        print(f"\n{'='*50}")
+        print(f"{'STOCK REPORT':^50}")
+        print(f"{'='*50}\n")
+
+        # Query to fetch the summary data from our VIEW
+        summary_query = sql.SQL("SELECT * FROM general_stock_report;")
+        self.db.execute_command(summary_query)
+        
+        # We use fetchone() because the VIEW only returns one row of totals
+        report_data = self.db.cur.fetchone()
+
+        if report_data:
+            print(f"{' GENERAL STOCK SUMMARY ':-^50}")
+            # report_data[0], [1], etc., correspond to the columns in the VIEW
+            print(f"Unique items registered: {report_data[0]}")
+            print(f"Total units in stock: {report_data[1]}")
+            print(f"Total stock value: R$ {report_data[2]:.2f}")
+            print(f"Average price per item: R$ {report_data[3]:.2f}")
+            print(f"{'-'*50}\n")
+        else:
+            print("Could not generate report. The stock might be empty.")
+
 
     def update_item(self):
         name = input("Write the name of the product that will be updated: ")
 
         new_name = input("Write the new name of the product: ")
         new_value = input("Write the new value of the product: ")
+        new_quantity = int(input("Write the new quantity: "))
 
-        data_to_send = (new_name, new_value, name)
+        data_to_send = (new_name, new_value, new_quantity, 'now()', name)
 
-        query = sql.SQL("UPDATE item SET name = %s, value = %s WHERE name = %s;")
+        query = sql.SQL("UPDATE item SET name = %s, value = %s, quantity = %s, last_update = %s WHERE name = %s;")
 
         self.db.execute_command(query, data_to_send)
         print("Item updated")
