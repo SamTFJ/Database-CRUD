@@ -9,7 +9,7 @@ python3 -m venv .venv
 
 ### Secondly, enter the .venv
 ```
-source .venv/bin/activate 
+source .venv/bin/activate
 ```
 
 ### Then, install the requirements for it
