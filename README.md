@@ -2,22 +2,17 @@
 
 ![Diagrama de Classes](assets/uml_errata.png)
 
-### First create the virtual .venv folder
+### First, create the virtual environment and install the components:
 ```
-python3 -m venv .venv
-```
-
-### Secondly, enter the .venv
-```
-source .venv/bin/activate 
+make install
 ```
 
-### Then, install the requirements for it
+### Secondly, create the DataBase correctly
 ```
-.venv/bin/python3 -m pip install -r requirements.txt
+make setup
 ```
 
 ### Finaly, to run
 ```
-.venv/bin/python3 CRUD.py
+make run
 ```
