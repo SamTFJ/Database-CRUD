@@ -14,11 +14,11 @@ class Client:
     
     def check_password(self, attempt):
         if self.password == attempt:
-            print("Senha correta!")
+            print("Correct password!")
             return True
         
         else:
-            print("Senha incorreta!")
+            print("Incorrect password!")
             return False
 
     def append_purchases(self, Purchase):
