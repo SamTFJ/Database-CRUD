@@ -42,6 +42,10 @@ class DBconnect:
         self.cur.close()
         self.conn.close()
 
+    def fetch_one(self, sqlcommand, Params = None):
+        self.cur.execute(sqlcommand, Params)
+        return self.cur.fetchone()
+
     # Executes a SQL command
     def execute_command(self, sqlcommand, Params = None):
         self.cur.execute(sqlcommand, Params)

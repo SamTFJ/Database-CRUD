@@ -18,11 +18,12 @@ class Client:
 
     def check_password(self, attempt):
         if self.password == attempt:
-            print("\n--> Correct Password!")
+            print("\n--> Correct password!")
             return True
         
         else:
-            print("\n--> Wrong Password!")
+            print("\n--> Incorrect password!")
+
             return False
 
     def append_purchases(self, Purchase):

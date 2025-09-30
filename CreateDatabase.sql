@@ -1,4 +1,4 @@
-CREATE DATABASE CRUD2;
+CREATE DATABASE CRUD;
 
 CREATE TABLE Product (
     id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -58,7 +58,8 @@ SELECT
     SUM(quantity * value) AS total_stock_value,
     AVG(value) AS average_price_per_item
 FROM
-    Produto;
+    Product;
+
 
 CREATE OR REPLACE VIEW sales_report AS
 SELECT

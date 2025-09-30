@@ -1,8 +1,9 @@
 class Salesman:
     def __init__(self):
-        self.name = None
         self.id = None
+        self.name = None
         self.password = None
+        self.number = None
     
     def set_name(self, name):
         self.name = name
@@ -22,6 +23,9 @@ class Salesman:
             print("\n--> Wrong Password!")
             return False
 
+    def set_password(self, password):
+        self.password = password
+
     @property
     def salesman(self):
-        return self.name, self.id
+        return self.id, self.name, self.password, self.number

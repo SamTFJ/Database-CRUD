@@ -1,19 +1,21 @@
-from dbconnection import DBconnect
+from backend.dbconnection import DBconnect
 from psycopg2 import sql
 
 class CRUD:
-    def __init__ (self):
+    def __init__ (self, type):
         self.db = DBconnect()
-
+        self.type = type
+        
     def run(self):
         while True:
             print("             MENU")
             print("|=================================|")
             print("|     1 - Insert new item         |")
+            print("|     1 - Insert new item         |")
+            print("|     1 - Insert new item         |")
             print("|     2 - Update item             |")
             print("|     3 - Delete item             |")
             print("|     4 - Search for item         |")
-            print("|     5 - Show all items          |")
             print("|     6 - Generate Stock Report   |")
             print("|     7 - Save and exit           |")
             print("|=================================|")
@@ -131,16 +133,13 @@ class CRUD:
         print(f"{'STOCK REPORT':^50}")
         print(f"{'='*50}\n")
 
-        # Query to fetch the summary data from our VIEW
         summary_query = sql.SQL("SELECT * FROM general_stock_report;")
         self.db.execute_command(summary_query)
         
-        # We use fetchone() because the VIEW only returns one row of totals
         report_data = self.db.cur.fetchone()
 
         if report_data:
             print(f"{' GENERAL STOCK SUMMARY ':-^50}")
-            # report_data[0], [1], etc., correspond to the columns in the VIEW
             print(f"Unique items registered: {report_data[0]}")
             print(f"Total units in stock: {report_data[1]}")
             print(f"Total stock value: R$ {report_data[2]:.2f}")
@@ -153,6 +152,3 @@ class CRUD:
         self.db.end_connection()
         print("Connection with the database endend")
 
-if __name__ == "__main__":
-    crud = CRUD()
-    crud.run()
