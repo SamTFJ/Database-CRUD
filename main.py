@@ -3,7 +3,6 @@ from psycopg2 import sql
 from backend.crud import CRUD
 from entities.client import Client
 from entities.product import Product
-from entities.purchase import Purchase
 from entities.sale_items import SaleItems
 from entities.sales import Sale
 from entities.salesman import Salesman
