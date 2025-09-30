@@ -50,13 +50,13 @@ Deletar (5)
 Voltar (0)""")
 
     try:
-        opcao = int(input('Opção: '))
-        if opcao == 1: None
-        elif opcao == 2: None
-        elif opcao == 3: None
-        elif opcao == 4: None
-        elif opcao == 5: None
-        elif opcao == 0: return
+        option = int(input('Opção: '))
+        if option == 1: None
+        elif option == 2: None
+        elif option == 3: None
+        elif option == 4: None
+        elif option == 5: None
+        elif option == 0: return
         else:
             print("\n--> Invalid Option!")
             input("\n--> Press Enter...")
