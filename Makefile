@@ -7,7 +7,7 @@ install:
 	.venv/bin/python3 -m pip install -r requirements.txt
 
 run: 
-	.venv/bin/python3 CRUD.py
+	.venv/bin/python3 crud.py
 
 setup:
 	psql -U $$db_user -p $$db_port -f CreateData

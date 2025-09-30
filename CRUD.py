@@ -1,4 +1,4 @@
-from dbconnection import DBconnect
+from backend.dbconnection import DBconnect
 from psycopg2 import sql
 
 class CRUD:
@@ -6,41 +6,45 @@ class CRUD:
         self.db = DBconnect()
 
     def run(self):
-        while True:
-            print("             MENU")
-            print("|=================================|")
-            print("|     1 - Insert new item         |")
-            print("|     2 - Update item             |")
-            print("|     3 - Delete item             |")
-            print("|     4 - Search for item         |")
-            print("|     5 - Show all items          |")
-            print("|     6 - Generate Stock Report   |")
-            print("|     7 - Save and exit           |")
-            print("|=================================|")
+        option = input("Are you a Customer (1) or a Salesperson (2)?")
+        if option == 1:
+            return 0
+        else:
+            while True:
+                print("             MENU")
+                print("|=================================|")
+                print("|     1 - Insert new item         |")
+                print("|     2 - Update item             |")
+                print("|     3 - Delete item             |")
+                print("|     4 - Search for item         |")
+                print("|     5 - Show all items          |")
+                print("|     6 - Generate Stock Report   |")
+                print("|     7 - Save and exit           |")
+                print("|=================================|")
 
-            choice = input("Select an option: ")
+                choice = input("Select an option: ")
 
-            if choice == '1':
-                self.insert_item()
-            elif choice == '2':
-                self.update_item()
-            elif choice == '3':
-                self.delete_item()
-            elif choice == '4':
-                self.search_item()
-            elif choice == '5':
-                self.list_collection()
-            elif choice == '6':
-                self.generate_stock_report()
-            elif choice == '7':
-                self.EndConnection()
-                print("Exiting application...")
-                break
-            else:
-                print("Invalid option. Please try again.")
+                if choice == '1':
+                    self.insert_item()
+                elif choice == '2':
+                    self.update_item()
+                elif choice == '3':
+                    self.delete_item()
+                elif choice == '4':
+                    self.search_item()
+                elif choice == '5':
+                    self.list_collection()
+                elif choice == '6':
+                    self.generate_stock_report()
+                elif choice == '7':
+                    self.EndConnection()
+                    print("Exiting application...")
+                    break
+                else:
+                    print("Invalid option. Please try again.")
 
-            if choice != '7':
-                input("\nPress Enter to continue...")
+                if choice != '7':
+                    input("\nPress Enter to continue...")
 
     def insert_item(self):
         name = input("Write the name of the product: ")
