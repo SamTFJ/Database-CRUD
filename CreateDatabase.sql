@@ -41,6 +41,16 @@ CREATE TABLE Sale_Items (
     item_value REAL NOT NULL
 );
 
+CREATE TABLE Purchases (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    client_id BIGINT NOT NULL REFERENCES Client(id),
+    product_id BIGINT NOT NULL REFERENCES Product(id),
+    quantity INT NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    total_value REAL NOT NULL,
+    purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE OR REPLACE VIEW general_stock_report AS
 SELECT
     COUNT(id) AS total_of_unique_items,
