@@ -1,9 +1,9 @@
-from backend.dbconnection import DBconnect
+from backend.supermarket import Supermarket
 from psycopg2 import sql
 
 class CRUD:
     def __init__ (self, type):
-        self.db = DBconnect()
+        self.supermarket = Supermarket()
         self.type = type
         
     def run(self):
@@ -53,7 +53,7 @@ class CRUD:
 
         data_to_send = (name, value, quantity)
 
-        self.db.execute_command(query, data_to_send)
+        self.supermarket.execute_command(query, data_to_send)
         print("Item inserted")
 
     def update_item(self):
@@ -67,7 +67,7 @@ class CRUD:
 
         query = sql.SQL("UPDATE item SET name = %s, value = %s, quantity = %s, last_update = %s WHERE name = %s;")
 
-        self.db.execute_command(query, data_to_send)
+        self.supermarket.execute_command(query, data_to_send)
         print("Item updated")
 
     def delete_item(self):
@@ -77,7 +77,7 @@ class CRUD:
 
         query = sql.SQL("DELETE FROM item WHERE name = %s;")
 
-        self.db.execute_command(query, data_to_send)
+        self.supermarket.execute_command(query, data_to_send)
         print("Item deleted")
     
     def search_item(self):
@@ -87,9 +87,9 @@ class CRUD:
 
         query = sql.SQL("SELECT * FROM item WHERE name = %s;")
 
-        self.db.execute_command(query, data_to_send)
+        self.supermarket.execute_command(query, data_to_send)
 
-        result = self.db.cur.fetchall()
+        result = self.supermarket.cur.fetchall()
 
         if result:
             for i in result:
@@ -105,21 +105,21 @@ class CRUD:
 
         query3 = sql.SQL("SELECT * FROM item;")
 
-        self.db.execute_command(query1)
+        self.supermarket.execute_command(query1)
 
-        result1 = self.db.cur.fetchall()
+        result1 = self.supermarket.cur.fetchall()
 
         print("The quantity of items stored is: ",result1[0][0])
         
-        self.db.execute_command(query2)
+        self.supermarket.execute_command(query2)
 
-        result2 = self.db.cur.fetchall()
+        result2 = self.supermarket.cur.fetchall()
 
         print("The total sum of values in items is: ", result2[0][0])
 
-        self.db.execute_command(query3)
+        self.supermarket.execute_command(query3)
 
-        result3 = self.db.cur.fetchall()
+        result3 = self.supermarket.cur.fetchall()
 
         if result3:
             for i in result3:
@@ -134,9 +134,9 @@ class CRUD:
         print(f"{'='*50}\n")
 
         summary_query = sql.SQL("SELECT * FROM general_stock_report;")
-        self.db.execute_command(summary_query)
+        self.supermarket.execute_command(summary_query)
         
-        report_data = self.db.cur.fetchone()
+        report_data = self.supermarket.cur.fetchone()
 
         if report_data:
             print(f"{' GENERAL STOCK SUMMARY ':-^50}")
@@ -149,6 +149,6 @@ class CRUD:
             print("Could not generate report. The stock might be empty.")
 
     def EndConnection(self):
-        self.db.end_connection()
+        self.supermarket.end_connection()
         print("Connection with the database endend")
 

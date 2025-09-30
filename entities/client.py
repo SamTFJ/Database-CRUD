@@ -1,3 +1,5 @@
+from backend.supermarket import Supermarket
+from psycopg2 import sql
 from entities.purchase import Purchase
 
 class Client:

@@ -1,14 +1,16 @@
-from backend.dbconnection import DBconnect
+from backend.supermarket import Supermarket
 from psycopg2 import sql
 from backend.crud import CRUD
 from entities.client import Client
 from entities.product import Product
 from entities.purchase import Purchase
+from entities.sale_items import SaleItems
+from entities.sale import Sale
 from entities.salesman import Salesman
 
 if __name__ == "__main__":
     type = None
-    db = DBconnect()
+    db = Supermarket()
     
     while type != "1" and type != "2":
         type = input("Are you a Client (1) or a Salesman (2)?\n")

@@ -1,3 +1,6 @@
+from backend.supermarket import Supermarket
+from psycopg2 import sql
+
 class Purchase:
     def __init__(self):
         # Será preenchido com Tuplas (Produto, Quantidade)

@@ -13,22 +13,18 @@ CREATE TABLE Client (
     name VARCHAR(50) NOT NULL,
     phone VARCHAR(15) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    purchases TEXT[]
 );
 
 CREATE TABLE Salesman (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    sales TEXT[]
 );
 
 CREATE TABLE Sales (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    product_id BIGINT NOT NULL REFERENCES Product(id),
     client_id BIGINT NOT NULL REFERENCES Client(id),
     salesman_id BIGINT NOT NULL REFERENCES Salesman(id),
-    quantity INT NOT NULL,
     total_value REAL NOT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
