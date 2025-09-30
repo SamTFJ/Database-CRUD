@@ -1,38 +1,7 @@
 from backend.supermarket import Supermarket
 from psycopg2 import sql
-from entities.purchase import Purchase
+supermarket = Supermarket()
 
-class Client:
-    def __init__(self):
-        self.name = None
-        self.password = None
-        self.phone = None
-        self.purchases = []
-
-    def set_name(self, name):
-        self.name = name
-
-    def set_password(self, password):
-        self.password = password
-    
-    def set_phone(self, phone):
-        self.phone = phone
-
-    def check_password(self, attempt):
-        if self.password == attempt:
-            print("\n--> Correct password!")
-            return True
-        
-        else:
-            print("\n--> Incorrect password!")
-
-            return False
-
-    def append_purchases(self, Purchase):
-        purchases = Purchase.get_items 
-        for i in purchases:
-            self.purchases.append(i)
-
-    @property
-    def client(self):
-        return self.name, self.password, self.phone, self.purchases
+def close_connection():
+    supermarket.end_connection()
+    print("\n--> Connection closed.")
