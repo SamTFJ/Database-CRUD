@@ -10,8 +10,9 @@ install:
 run: 
 	.venv/bin/python3 main.py
 
+.ONESHELL:
 setup:
-	psql -U $$db_user -p $$db_port -f CreateData
+	psql -U $(db_user) -h $(db_host) -p $(db_port2) -d postgres -f CreateDatabase.sql
 
 # .PHONY declara que estas regras não criam arquivos com esses nomes.
 .PHONY: run all stop

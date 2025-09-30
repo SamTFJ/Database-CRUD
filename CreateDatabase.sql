@@ -1,11 +1,54 @@
 CREATE DATABASE CRUD;
 
-CREATE TABLE item (
+CREATE TABLE Product (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     value REAL NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Client (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    purchases TEXT[]
+);
+
+CREATE TABLE Salesman (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    sales TEXT[]
+);
+
+CREATE TABLE Sales (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    product_id BIGINT NOT NULL REFERENCES Product(id),
+    client_id BIGINT NOT NULL REFERENCES Client(id),
+    salesman_id BIGINT NOT NULL REFERENCES Salesman(id),
+    quantity INT NOT NULL,
+    total_value REAL NOT NULL,
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Sale_Items (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    sale_id BIGINT NOT NULL REFERENCES Sales(id),
+    product_id BIGINT NOT NULL REFERENCES Product(id),
+    quantity INT NOT NULL,
+    item_value REAL NOT NULL
+);
+
+CREATE TABLE Purchases (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    client_id BIGINT NOT NULL REFERENCES Client(id),
+    product_id BIGINT NOT NULL REFERENCES Product(id),
+    quantity INT NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    total_value REAL NOT NULL,
+    purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE OR REPLACE VIEW general_stock_report AS
@@ -15,4 +58,25 @@ SELECT
     SUM(quantity * value) AS total_stock_value,
     AVG(value) AS average_price_per_item
 FROM
-    item;
+    Product;
+
+CREATE OR REPLACE VIEW sales_report AS
+SELECT
+    s.id AS sale_id,
+    c.name AS client_name,
+    sm.name AS salesman_name,
+    p.name AS product_name,
+    si.quantity AS quantity_sold,
+    si.item_value AS item_value,
+    s.total_value AS total_sale_value,
+    s.sale_date AS sale_date
+FROM
+    Sales s
+JOIN
+    Client c ON s.client_id = c.id
+JOIN
+    Salesman sm ON s.salesman_id = sm.id
+JOIN
+    Sale_Items si ON s.id = si.sale_id
+JOIN
+    Product p ON si.product_id = p.id;  
