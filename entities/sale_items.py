@@ -1,7 +1,7 @@
 from backend.supermarket import Supermarket
 from psycopg2 import sql
 
-class Sale_Items:
+class SaleItems:
     def __init__(self):
         self.id = None
         self.name = None
