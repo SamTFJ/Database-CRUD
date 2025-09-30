@@ -8,6 +8,7 @@ class Sale:
         self.id = None
         self.client_id = None
         self.salesman_id = None
+        self.payment_method = None
         self.total_value = None
         self.sale_date = None
     
@@ -20,6 +21,9 @@ class Sale:
         
     def set_salesman_id(self, salesman_id):
         self.salesman_id = salesman_id
+
+    def set_payment_method(self, payment_method):
+        self.payment_method = payment_method
         
     def set_total_value(self, total_value):
         self.total_value = total_value
@@ -34,6 +38,7 @@ class Sale:
             self.id,
             self.client_id,
             self.salesman_id,
+            self.payment_method,
             self.total_value,
             self.sale_date
         )
