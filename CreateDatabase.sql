@@ -60,6 +60,7 @@ SELECT
 FROM
     Product;
 
+
 CREATE OR REPLACE VIEW sales_report AS
 SELECT
     s.id AS sale_id,
