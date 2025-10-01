@@ -11,11 +11,11 @@ def login_salesman():
 
     query = sql.SQL("SELECT * FROM Salesman WHERE name = %s AND password = %s")
 
-    if supermarket.fetch_all(query, data_to_send):
-        return 0
+    if supermarket.fetch_one(query, data_to_send) != None:
+        return True
 
     else:
-        return 1
+        return False
 
 def insert_salesman():
     name = input("Write the name of the salesman: ")
