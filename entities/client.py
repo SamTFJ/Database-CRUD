@@ -2,10 +2,6 @@ from backend.supermarket import Supermarket
 from psycopg2 import sql
 supermarket = Supermarket()
 
-def close_connection():
-    supermarket.end_connection()
-    print("\n--> Connection closed.")
-
 def insert_client():
     name = input("Write the name of the client: ")
     password = input("Write the password of the client: ")
@@ -114,3 +110,7 @@ def clients_crud_menu():
         print(f"Erro: {e}")
         input("\n--> Press Enter...")
         clients_crud_menu()
+
+def close_connection():
+    supermarket.end_connection()
+    print("\n--> Connection closed.")

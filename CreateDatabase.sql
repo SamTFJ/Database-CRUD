@@ -8,6 +8,7 @@ CREATE TABLE Product (
     value REAL NOT NULL,
     category VARCHAR(50) NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
+    fabricado_em_mari BOOLEAN DEFAULT FALSE,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
