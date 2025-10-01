@@ -68,15 +68,15 @@ def main_client_menu():
             if option == 1:
                 Product.list_items_product()
             elif option == 2:
-                Client.make_purchase()
+                if Client.login_client():
+                    Client.make_purchase()
             elif option == 3:
-                Client.view_my_purchases()
+                if Client.login_client():
+                    Client.view_my_purchases()
             elif option == 4:
                 Client.view_my_data()
             elif option == 8:
                 Client.register_client()
-            elif option == 9:
-                Client.login_client()
             elif option == 0:
                 break
             else:
@@ -108,8 +108,11 @@ def main():
             
             if option == 1:
                 if Salesman.login_salesman():
-                    main_salesman_menu()
-            
+                    main_salesman_menu() # Só então o menu principal do funcionário é chamado.
+                else:
+                    print("Wrong credentials!")
+                    main()
+
             elif option == 2:
                 # Delega para o menu de clientes.
                 main_client_menu()
