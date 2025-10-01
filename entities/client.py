@@ -66,6 +66,20 @@ def delete_client():
     supermarket.execute_command(query, data_to_send)
     print("Client deleted")
 
+def login_client():
+    name = input("Write your name: ")
+    password = input("Write your password")
+
+    data_to_send = (name, password)
+
+    query = sql.SQL("SELECT * FROM Client WHERE name = %s AND password = %s")
+
+    if supermarket.fetch_one(query, data_to_send):
+        return 0
+
+    else:
+        return 1
+
 def clients_crud_menu():
 
     print(f"""{'-'*42}
