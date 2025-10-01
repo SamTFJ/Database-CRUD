@@ -2,6 +2,10 @@ from backend.supermarket import Supermarket
 from psycopg2 import sql
 supermarket = Supermarket()
 
+def close_connection():
+    supermarket.end_connection()
+    print("\n--> Connection closed.")
+
 def insert_client():
     name = input("Write the name of the client: ")
     password = input("Write the password of the client: ")
@@ -64,17 +68,16 @@ def delete_client():
 
 def login_client():
     name = input("Write your name: ")
-    password = input("Write your password")
+    password = input("Write your password: ")
 
     data_to_send = (name, password)
 
     query = sql.SQL("SELECT * FROM Client WHERE name = %s AND password = %s")
 
-    if supermarket.fetch_one(query, data_to_send):
-        return 0
-
+    if supermarket.fetch_one(query, data_to_send) != None:
+        return True
     else:
-        return 1
+        return False
 
 def make_purchase():
     carrinho = []
@@ -121,13 +124,15 @@ def make_purchase():
 
     # Início da Transação
     try:
+
         print(f"\nFinalizando compra. Total: R${total_compra:.2f}")
-        supermarket.begin_transaction() # Apenas para clareza
+
+        payment_method = input("Write your payment method: ")
 
         # 1. Inserir o "cabeçalho" na tabela Sales e obter o ID da nova venda
         query_sales = sql.SQL("INSERT INTO Sales (client_id, salesman_id, payment_method, total_value) VALUES (%s, %s, %s, %s) RETURNING id;")
         # RETURNING id é um recurso do PostgreSQL para obter o ID recém-criado
-        sale_id = supermarket.fetch_one(query_sales, (client_id, salesman_id, "Cartão", total_compra))[0]
+        sale_id = supermarket.fetch_one(query_sales, (client_id, salesman_id, payment_method, total_compra))[0]
 
         # 2. Loop no carrinho para inserir os itens e atualizar o estoque
         for item in carrinho:
@@ -140,12 +145,10 @@ def make_purchase():
             supermarket.execute_command(query_stock, (item['qtd'], item['id']))
         
         # 3. Se tudo deu certo, efetiva a transação
-        supermarket.commit_transaction()
         print("\n--- Compra realizada com sucesso! ---")
 
     except Exception as e:
         # 4. Se algo deu errado, desfaz tudo
-        supermarket.rollback_transaction()
         print(f"\n--> Ocorreu um erro. A compra foi cancelada. Detalhe: {e}")
 
 def clients_crud_menu():
@@ -179,7 +182,3 @@ def clients_crud_menu():
         print(f"Erro: {e}")
         input("\n--> Press Enter...")
         clients_crud_menu()
-
-def close_connection():
-    supermarket.end_connection()
-    print("\n--> Connection closed.")
