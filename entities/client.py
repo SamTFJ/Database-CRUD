@@ -19,7 +19,7 @@ def insert_client():
 def list_client():
     query1 = sql.SQL("SELECT COUNT(*) FROM Client;")
 
-    query3 = sql.SQL("SELECT * FROM Client;")
+    query3 = sql.SQL("SELECT id, name FROM Client;")
 
     supermarket.execute_command(query1)
 
@@ -37,6 +37,48 @@ def list_client():
         print("Items found")
     else:
         print("Items not found")
+
+def search_by_id_client():
+    id = input("Write the id of the client to be searched: ")
+
+    data_to_send = (id,)
+
+    query = sql.SQL("SELECT id, name FROM client WHERE id = %s;")
+
+    supermarket.execute_command(query, data_to_send)
+
+    result = supermarket.cur.fetchall()
+
+    if result:
+        for i in result:
+            print(i)
+        print("Client found")
+    else:
+        print("Client not found")
+
+def delete_client():
+    name = input("Write the name of the product that will be deleted: ")
+
+    data_to_send = (name,)
+
+    query = sql.SQL("DELETE FROM Client WHERE name = %s;")
+
+    supermarket.execute_command(query, data_to_send)
+    print("Client deleted")
+
+def login_client():
+    name = input("Write your name: ")
+    password = input("Write your password")
+
+    data_to_send = (name, password)
+
+    query = sql.SQL("SELECT * FROM Client WHERE name = %s AND password = %s")
+
+    if supermarket.fetch_one(query, data_to_send):
+        return 0
+
+    else:
+        return 1
 
 def clients_crud_menu():
 
@@ -58,7 +100,7 @@ def clients_crud_menu():
         elif option == 3:
             search_by_id_client()
         elif option == 4:
-            delete_item_client()
+            delete_client()
         elif option == 5:
             return 0
         else:
