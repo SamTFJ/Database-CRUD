@@ -5,20 +5,21 @@ supermarket = Supermarket()
 def insert_item_product():
     name = input("Write the name of the product: ")
     value = float(input("Write the value of the product (EX: 20.5): "))
+    category = input("write the category of the product: ")
     quantity = int(input("Write the quantity in stock: "))
+    
+    query = sql.SQL("INSERT INTO Product (name, value, category, quantity) VALUES (%s, %s, %s, %s)")
 
-    query = sql.SQL("INSERT INTO Product (name, value, quantity) VALUES (%s, %s, %s)")
-
-    data_to_send = (name, value, quantity)
+    data_to_send = (name, value, category, quantity)
 
     supermarket.execute_command(query, data_to_send)
 
 def list_items_product():
-    query1 = sql.SQL("SELECT COUNT(*) FROM item;")
+    query1 = sql.SQL("SELECT COUNT(*) FROM Product;")
 
-    query2 = sql.SQL("SELECT SUM(value) FROM item;")
+    query2 = sql.SQL("SELECT SUM(value) FROM Product;")
 
-    query3 = sql.SQL("SELECT * FROM item;")
+    query3 = sql.SQL("SELECT * FROM Product;")
 
     supermarket.execute_command(query1)
 
