@@ -8,14 +8,12 @@ CREATE TABLE Product (
     value REAL NOT NULL,
     category VARCHAR(50) NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
-    fabricado_em_mari BOOLEAN DEFAULT FALSE,
     last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Client (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
     password VARCHAR(50) NOT NULL
 );
 
@@ -28,7 +26,7 @@ CREATE TABLE Salesman (
 CREATE TABLE Sales (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     salesman_id BIGINT NOT NULL REFERENCES Salesman(id),
-    client_id BIGINT NOT NULL,
+    client_id BIGINT NOT NULL REFERENCES Client(id),
     payment_method VARCHAR(20) NOT NULL,
     total_value REAL NOT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
