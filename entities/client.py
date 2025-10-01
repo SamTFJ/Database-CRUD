@@ -43,7 +43,7 @@ def search_by_id_client():
 
     data_to_send = (id,)
 
-    query = sql.SQL("SELECT id, name FROM client WHERE id = %s;")
+    query = sql.SQL("SELECT id, name FROM Client WHERE id = %s;")
 
     supermarket.execute_command(query, data_to_send)
 
@@ -57,7 +57,7 @@ def search_by_id_client():
         print("Client not found")
 
 def delete_client():
-    name = input("Write the name of the product that will be deleted: ")
+    name = input("Write the name of the client that will be deleted: ")
 
     data_to_send = (name,)
 
@@ -79,6 +79,9 @@ def login_client():
 
     else:
         return 1
+
+def make_purchase():
+    return
 
 def clients_crud_menu():
 
