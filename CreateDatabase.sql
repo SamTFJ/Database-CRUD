@@ -27,11 +27,15 @@ CREATE TABLE Salesman (
 
 CREATE TABLE Sales (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    client_id BIGINT NOT NULL REFERENCES Client(id),
     salesman_id BIGINT NOT NULL REFERENCES Salesman(id),
+    client_id BIGINT NOT NULL,
     payment_method VARCHAR(20) NOT NULL,
     total_value REAL NOT NULL,
-    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_client -- Restrição de Chave estrangeira
+    FOREIGN KEY (client_id)
+    REFERENCES Client(id)
 );
 
 CREATE TABLE Sale_Items (

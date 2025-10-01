@@ -7,9 +7,9 @@ import entities.sale_items as SaleItems
 # --- Menu para Funcionários (Salesman) ---
 def main_salesman_menu():
     while True:
-        print(f'{'-'*42}'
-        f'{'-'*14} SALESMAN MENU {'-'*15}'
-        f'{'-'*42}'
+        print(f"{'-'*42}\n"
+        f"{'-'*14} SALESMAN MENU {'-'*15}\n"
+        f"{'-'*42}\n"
         '(1) Manage Products\n'
         '(2) Manage Clients\n'
         '(3) Manage Sales\n'
@@ -48,9 +48,9 @@ def main_client_menu():
     """Apresenta o menu de ações para clientes."""
     while True:
         # Apresenta as opções que um cliente pode realizar.
-        print(f'{'-'*42}'
-        f'{'-'*16} CLIENT MENU {'-'*15}'
-        f'{'-'*42}'
+        print(f"{'-'*42}\n"
+        f"{'-'*16} CLIENT MENU {'-'*15}\n"
+        f"{'-'*42}\n"
         '(1) View Products\n'
         '(2) Make a Purchase\n'
         '(3) View my Purchases\n'
@@ -93,9 +93,9 @@ def main():
     # O loop principal do programa. Continua até o usuário escolher sair.
     while True:
         # Mostra o primeiro menu, perguntando o tipo de usuário.
-        print(f'{'-'*42}\n'
-        f'{'-'*18} MAIN MENU {'-'*18}\n'
-        f'{'-'*42}'
+        print(f"{'-'*42}\n"
+        f"{'-'*18} MAIN MENU {'-'*18}\n"
+        f"{'-'*42}\n"
         '(1) Access as Salesman\n'
         '(2) Access as Client\n'
         '(0) Exit\n')
@@ -104,11 +104,15 @@ def main():
             option = int(input('Select an option: '))
             
             if option == 1:
-                if Salesman.login_salesman():
-                    main_salesman_menu() # Só então o menu principal do funcionário é chamado.
+                option2 = int(input('Register (1) or log in (2)?: '))
+                if option2 == 2:
+                    if Salesman.login_salesman():
+                        main_salesman_menu() # Só então o menu principal do funcionário é chamado.
+                    else:
+                        print("Wrong credentials!")
+                        main()
                 else:
-                    print("Wrong credentials!")
-                    main()
+                    Salesman.insert_salesman()
 
             elif option == 2:
                 # Delega para o menu de clientes.
