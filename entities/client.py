@@ -81,7 +81,76 @@ def login_client():
         return 1
 
 def make_purchase():
-    return
+    carrinho = []
+    total_compra = 0
+
+    # Loop para adicionar produtos ao carrinho
+    while True:
+        try:
+            # Mostra alguns produtos para facilitar
+            print("\nProdutos disponíveis:")
+            available_products = supermarket.fetch_all("SELECT id, name, value, quantity FROM Product WHERE quantity > 0 LIMIT 20;")
+            for p in available_products:
+                print(f"  ID: {p[0]}, Nome: {p[1]}, Preço: R${p[2]:.2f}, Estoque: {p[3]}")
+
+            product_id = int(input("\nDigite o ID do produto a adicionar (ou 0 para finalizar): "))
+            if product_id == 0:
+                break
+
+            # Valida o produto e o estoque
+            produto = supermarket.fetch_one("SELECT value, quantity FROM Product WHERE id = %s", (product_id,))
+            if not produto:
+                print("--> Produto não encontrado.")
+                continue
+            
+            estoque_disponivel = produto[1]
+            preco_unitario = produto[0]
+
+            quantidade = int(input(f"Digite a quantidade (disponível: {estoque_disponivel}): "))
+            if quantidade <= 0 or quantidade > estoque_disponivel:
+                print("--> Quantidade inválida ou fora de estoque.")
+                continue
+
+            # Adiciona ao carrinho
+            carrinho.append({'id': product_id, 'qtd': quantidade, 'valor': preco_unitario})
+            total_compra += quantidade * preco_unitario
+            print(f"--> Produto adicionado! Total parcial: R${total_compra:.2f}")
+
+        except ValueError:
+            print("--> Por favor, digite um número válido.")
+
+    if not carrinho:
+        print("Nenhum produto no carrinho. Compra cancelada.")
+        return
+
+    # Início da Transação
+    try:
+        print(f"\nFinalizando compra. Total: R${total_compra:.2f}")
+        supermarket.begin_transaction() # Apenas para clareza
+
+        # 1. Inserir o "cabeçalho" na tabela Sales e obter o ID da nova venda
+        query_sales = sql.SQL("INSERT INTO Sales (client_id, salesman_id, payment_method, total_value) VALUES (%s, %s, %s, %s) RETURNING id;")
+        # RETURNING id é um recurso do PostgreSQL para obter o ID recém-criado
+        sale_id = supermarket.fetch_one(query_sales, (client_id, salesman_id, "Cartão", total_compra))[0]
+
+        # 2. Loop no carrinho para inserir os itens e atualizar o estoque
+        for item in carrinho:
+            # 2a. Inserir em Sale_Items
+            query_items = sql.SQL("INSERT INTO Sale_Items (sale_id, product_id, quantity, item_value) VALUES (%s, %s, %s, %s);")
+            supermarket.execute_command(query_items, (sale_id, item['id'], item['qtd'], item['valor']))
+
+            # 2b. Atualizar o estoque em Product
+            query_stock = sql.SQL("UPDATE Product SET quantity = quantity - %s WHERE id = %s;")
+            supermarket.execute_command(query_stock, (item['qtd'], item['id']))
+        
+        # 3. Se tudo deu certo, efetiva a transação
+        supermarket.commit_transaction()
+        print("\n--- Compra realizada com sucesso! ---")
+
+    except Exception as e:
+        # 4. Se algo deu errado, desfaz tudo
+        supermarket.rollback_transaction()
+        print(f"\n--> Ocorreu um erro. A compra foi cancelada. Detalhe: {e}")
 
 def clients_crud_menu():
 
