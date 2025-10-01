@@ -16,44 +16,57 @@ def coletar_dados_produto():
     return (name, value, category, quantity)
 
 def insert_item_product():
-    name = input("Write the name of the product: ")
-    value = float(input("Write the value of the product (EX: 20.5): "))
-    category = input("write the category of the product: ")
-    quantity = int(input("Write the quantity in stock: "))
+    """Cadastra um novo produto no banco de dados."""
+    print("\n--- Register New Product ---")
+    # Usa a função auxiliar para pegar os dados
+    dados = coletar_dados_produto()
     
+    # Prepara a query com todas as colunas necessárias
     query = sql.SQL("INSERT INTO Product (name, value, category, quantity) VALUES (%s, %s, %s, %s)")
+    
+    if supermarket.execute_command(query, dados):
+        print(f"\n--> Product '{dados[0]}' registered successfully!")
+    
+    input("\n--> Press Enter to continue...")
 
-    data_to_send = (name, value, category, quantity)
+def update_item_product():
+    """Altera os dados de um produto existente."""
+    print("\n--- Update Product ---")
+    product_id = int(input("--> Enter the ID of the product to update: ").strip())
+    
+    # Busca o produto para garantir que ele existe
+    product = supermarket.fetch_one(sql.SQL("SELECT * FROM Product WHERE id = %s"), (product_id,))
+    
+    if not product:
+        print(f"\n--> Product with ID {product_id} not found.")
+        input("\n--> Press Enter to continue...")
+        return
 
-    supermarket.execute_command(query, data_to_send)
+    print("\n--> Product Found. Enter the new data:")
+    # Usa a função auxiliar para coletar os novos dados
+    novos_dados = coletar_dados_produto()
+    
+    # Prepara a query de UPDATE
+    query = sql.SQL("UPDATE Product SET name = %s, value = %s, category = %s, quantity = %s, last_update = CURRENT_TIMESTAMP WHERE id = %s")
+    # Junta os novos dados com o ID do produto
+    dados_para_enviar = (*novos_dados, product_id)
+
+    if supermarket.execute_command(query, dados_para_enviar):
+        print(f"\n--> Product ID {product_id} updated successfully!")
+    
+    input("\n--> Press Enter to continue...")
 
 def list_items_product():
-    query1 = sql.SQL("SELECT COUNT(*) FROM Product;")
+    """Lista todos os produtos cadastrados."""
+    print("\n--- Listing All Products ---")
+    query = sql.SQL("SELECT id, name, value, quantity FROM Product ORDER BY name")
+    products = supermarket.fetch_all(query)
 
-    query2 = sql.SQL("SELECT SUM(value) FROM Product;")
-
-    query3 = sql.SQL("SELECT * FROM Product;")
-
-    supermarket.execute_command(query1)
-
-    result1 = supermarket.cur.fetchall()
-
-    print("The quantity of items stored is: ",result1[0][0])
-    
-    supermarket.execute_command(query2)
-
-    result2 = supermarket.cur.fetchall()
-
-    print("The total sum of values in items is: ", result2[0][0])
-
-    supermarket.execute_command(query3)
-
-    result3 = supermarket.cur.fetchall()
-
-    if result3:
-        for i in result3:
-            print(i)
-        print("Items found")
+    if products:
+        # Imprime de forma simples, como no seu código original
+        for product in products:
+            print(product)
+        print("\n--> Items found")
     else:
         print("\n--> No products found.")
     
