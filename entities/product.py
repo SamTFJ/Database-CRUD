@@ -1,8 +1,8 @@
 from backend.supermarket import Supermarket
 from psycopg2 import sql
+supermarket = Supermarket()
 
 def insert_item_product():
-    db = Supermarket()
     name = input("Write the name of the product: ")
     value = float(input("Write the value of the product (EX: 20.5): "))
     quantity = int(input("Write the quantity in stock: "))
@@ -11,31 +11,30 @@ def insert_item_product():
 
     data_to_send = (name, value, quantity)
 
-    db.execute_command(query, data_to_send)
+    supermarket.execute_command(query, data_to_send)
 
 def list_items_product():
-    db = Supermarket()
     query1 = sql.SQL("SELECT COUNT(*) FROM item;")
 
     query2 = sql.SQL("SELECT SUM(value) FROM item;")
 
     query3 = sql.SQL("SELECT * FROM item;")
 
-    db.execute_command(query1)
+    supermarket.execute_command(query1)
 
-    result1 = db.cur.fetchall()
+    result1 = supermarket.cur.fetchall()
 
     print("The quantity of items stored is: ",result1[0][0])
     
-    db.execute_command(query2)
+    supermarket.execute_command(query2)
 
-    result2 = db.cur.fetchall()
+    result2 = supermarket.cur.fetchall()
 
     print("The total sum of values in items is: ", result2[0][0])
 
-    db.execute_command(query3)
+    supermarket.execute_command(query3)
 
-    result3 = db.cur.fetchall()
+    result3 = supermarket.cur.fetchall()
 
     if result3:
         for i in result3:
@@ -45,7 +44,6 @@ def list_items_product():
         print("Items not found")
 
 def search_by_id_product():
-    db = Supermarket()
  
     id = input("Write the id of the product to be searched: ")
 
@@ -53,9 +51,9 @@ def search_by_id_product():
 
     query = sql.SQL("SELECT * FROM Product WHERE id = %s;")
 
-    db.execute_command(query, data_to_send)
+    supermarket.execute_command(query, data_to_send)
 
-    result = db.cur.fetchall()
+    result = supermarket.cur.fetchall()
 
     if result:
         for i in result:
@@ -65,14 +63,13 @@ def search_by_id_product():
         print("Item not found")
 
 def delete_item_product():
-    db = Supermarket()
     name = input("Write the name of the product that will be deleted: ")
 
     data_to_send = (name,)
 
     query = sql.SQL("DELETE FROM Product WHERE name = %s;")
 
-    db.execute_command(query, data_to_send)
+    supermarket.execute_command(query, data_to_send)
     print("Item deleted")
 
 def product_crud_menu():

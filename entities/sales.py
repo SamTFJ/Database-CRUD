@@ -1,6 +1,5 @@
 from backend.supermarket import Supermarket
 from psycopg2 import sql
-
 supermarket = Supermarket()
 
 # --- FUNÇÕES DO "MINI-CRUD" DE VENDAS ---
