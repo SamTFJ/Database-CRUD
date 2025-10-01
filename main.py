@@ -24,7 +24,7 @@ def main_salesman_menu():
             
             # Delega a tarefa para a função de menu do especialista apropriado.
             if option == 1:
-                Product.products_crud_menu()
+                Product.product_crud_menu()
             elif option == 2:
                 Client.clients_crud_menu()
             elif option == 3:
@@ -61,7 +61,6 @@ def main_client_menu():
 (3) View my Purchases
 (4) View my Data
 (8) Register as a new Client
-(9) Login
 (0) Back""")
 
         try:
@@ -71,20 +70,17 @@ def main_client_menu():
                 # Qualquer um pode ver os produtos, não precisa de login.
                 Product.list_products_for_client()
             elif option == 2:
-                # Ação que exige login.
-                Client.make_purchase()
+                if Client.login_client():
+                    Client.make_purchase()
             elif option == 3:
-                # Ação que exige login.
-                Client.view_my_purchases()
+                if Client.login_client():
+                    Client.view_my_purchases()
             elif option == 4:
                 # Ação que exige login.
                 Client.view_my_data()
             elif option == 8:
                 # Delega a tarefa de cadastro para o especialista em clientes.
                 Client.register_client()
-            elif option == 9:
-                # Delega a tarefa de login para o especialista.
-                Client.login_client()
             elif option == 0:
                 # Encerra o loop e volta para o menu principal.
                 break
@@ -120,7 +116,10 @@ def main():
                 # A função de login do vendedor deve retornar True se o login for bem-sucedido.
                 if Salesman.login_salesman():
                     main_salesman_menu() # Só então o menu principal do funcionário é chamado.
-            
+                else:
+                    print("Wrong credentials!")
+                    main()
+
             elif option == 2:
                 # Delega para o menu de clientes.
                 main_client_menu()
