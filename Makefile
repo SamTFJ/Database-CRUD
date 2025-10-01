@@ -14,5 +14,7 @@ run:
 setup:
 	psql -U $(db_user) -h $(db_host) -p $(db_port2) -d postgres -f CreateDatabase.sql
 
+drop:
+	psql -U $(db_user) -h $(db_host) -p $(db_port2) -d postgres -f DropDatabase.sql
 # .PHONY declara que estas regras não criam arquivos com esses nomes.
 .PHONY: run all stop

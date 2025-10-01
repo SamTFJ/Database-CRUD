@@ -14,7 +14,6 @@ CREATE TABLE Product (
 CREATE TABLE Client (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    phone VARCHAR(15) NOT NULL,
     password VARCHAR(50) NOT NULL
 );
 

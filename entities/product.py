@@ -15,9 +15,9 @@ def insert_item_product():
     supermarket.execute_command(query, data_to_send)
 
 def list_items_product():
-    query1 = sql.SQL("SELECT COUNT(*) FROM Product;")
+    query1 = sql.SQL("SELECT SUM(quantity) FROM Product;")
 
-    query2 = sql.SQL("SELECT SUM(value) FROM Product;")
+    query2 = sql.SQL("SELECT SUM(value * quantity) FROM Product;")
 
     query3 = sql.SQL("SELECT * FROM Product;")
 
