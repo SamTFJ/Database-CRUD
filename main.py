@@ -28,10 +28,7 @@ def main_salesman_menu():
             elif option == 3:
                 Sales.sales_crud_menu()
             elif option == 4:
-                Salesman.salesmen_crud_menu()
-            # elif option == 5:
-                # Chame função de gerar relatórios.
-                # report.reports_menu()
+                Salesman.salesman_crud_menu()
             elif option == 0:
                 print("\nLogging out from salesman area...")
                 break
@@ -76,7 +73,7 @@ def main_client_menu():
             elif option == 4:
                 Client.view_my_data()
             elif option == 8:
-                Client.register_client()
+                Client.insert_client()
             elif option == 0:
                 break
             else:
