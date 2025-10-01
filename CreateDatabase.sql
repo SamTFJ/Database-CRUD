@@ -26,7 +26,7 @@ CREATE TABLE Salesman (
 CREATE TABLE Sales (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     salesman_id BIGINT NOT NULL REFERENCES Salesman(id),
-    client_id BIGINT NOT NULL,
+    client_id BIGINT NOT NULL REFERENCES Client(id),
     payment_method VARCHAR(20) NOT NULL,
     total_value REAL NOT NULL,
     sale_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

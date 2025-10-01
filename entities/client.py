@@ -124,13 +124,15 @@ def make_purchase():
 
     # Início da Transação
     try:
+
         print(f"\nFinalizando compra. Total: R${total_compra:.2f}")
-        supermarket.begin_transaction() # Apenas para clareza
+
+        payment_method = input("Write your payment method: ")
 
         # 1. Inserir o "cabeçalho" na tabela Sales e obter o ID da nova venda
         query_sales = sql.SQL("INSERT INTO Sales (client_id, salesman_id, payment_method, total_value) VALUES (%s, %s, %s, %s) RETURNING id;")
         # RETURNING id é um recurso do PostgreSQL para obter o ID recém-criado
-        sale_id = supermarket.fetch_one(query_sales, (client_id, salesman_id, "Cartão", total_compra))[0]
+        sale_id = supermarket.fetch_one(query_sales, (client_id, salesman_id, payment_method, total_compra))[0]
 
         # 2. Loop no carrinho para inserir os itens e atualizar o estoque
         for item in carrinho:
@@ -143,7 +145,6 @@ def make_purchase():
             supermarket.execute_command(query_stock, (item['qtd'], item['id']))
         
         # 3. Se tudo deu certo, efetiva a transação
-        supermarket.commit_transaction()
         print("\n--- Compra realizada com sucesso! ---")
 
     except Exception as e:
