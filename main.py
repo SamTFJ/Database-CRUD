@@ -64,8 +64,7 @@ def main_client_menu():
             if option == 1:
                 Product.list_items_product()
             elif option == 2:
-                if Client.login_client():
-                    Client.make_purchase()
+                Client.make_purchase()
             elif option == 3:
                 if Client.login_client():
                     Client.view_my_purchases()
