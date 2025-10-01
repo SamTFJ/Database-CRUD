@@ -55,8 +55,7 @@ def main_client_menu():
         '(2) Make a Purchase\n'
         '(3) View my Purchases\n'
         '(4) View my Data\n'
-        '(8) Register as a new Client\n'
-        '(9) Login\n'
+        '(5) Register as a new Client\n'
         '(0) Back\n')
 
         try:
@@ -72,7 +71,7 @@ def main_client_menu():
                     Client.view_my_purchases()
             elif option == 4:
                 Client.view_my_data()
-            elif option == 8:
+            elif option == 5:
                 Client.insert_client()
             elif option == 0:
                 break
